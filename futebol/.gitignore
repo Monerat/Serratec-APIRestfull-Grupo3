@@ -31,3 +31,4 @@ build/
 
 ### VS Code ###
 .vscode/
+./futebol/src/main/java/br/com/grupo3/futebol/base
