@@ -7,6 +7,7 @@ public class Time {
     private String nome;
     private String estado;
     private String dataFundacao;
+    private String escudo;
     
     public long getId() {
         return id;
@@ -40,9 +41,18 @@ public class Time {
         this.dataFundacao = dataFundacao;
     }
     
+    public String getEscudo() {
+        return escudo;
+    }
+
+    public void setEscudo(String escudo) {
+        this.escudo = escudo;
+    }
+
     public void isValid(){
         if(nome.equals("") || estado.equals("") || dataFundacao.equals("")){
             throw new ResourceBadRequest("Tá escrevendo errado a requisição, se vira pra acertar ai");
         }
     }
+    
 }
