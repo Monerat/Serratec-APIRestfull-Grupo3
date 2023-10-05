@@ -13,10 +13,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
 @RequestMapping("/api/upload")
 public class UploadArquivoController {
     
+    @ApiModelProperty(value = "Caminho para salvar as imagens dos escudos dos times")
     private final String pathArquivos;
 
     public UploadArquivoController(@Value("${app.path.arquivos}") String pathArquivos){
@@ -24,6 +30,12 @@ public class UploadArquivoController {
     }
 
     @PostMapping("/arquivo")
+    @ApiOperation(value = "Adiciona a imagem do escudo do Time", notes = "utilizar uma imagem png com somente o nome do time.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Adiciona qualquer arquivo, mas se puder bota um escudo.png por favor"),
+            @ApiResponse(code = 400, message = "Erro por parte do usuário ao fazer a requisição"),
+            @ApiResponse(code = 404, message = "Recurso não encontrado")
+    })
     public ResponseEntity<String> salvarArquivo(@RequestParam("file") MultipartFile file){
         var caminho = pathArquivos + file.getOriginalFilename();
         try{

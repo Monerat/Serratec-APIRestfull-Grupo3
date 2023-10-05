@@ -1,12 +1,19 @@
 package br.com.grupo3.futebol.model;
 
 import br.com.grupo3.futebol.model.exceptions.ResourceBadRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 public class Time {
+
+    @ApiModelProperty(value="Identificador unico do time, autoincremental")
     private long id;
+    @ApiModelProperty(value="Nome do time", required = true)
     private String nome;
+    @ApiModelProperty(value="Estado de origem do time", required = true)
     private String estado;
+    @ApiModelProperty(value="Data de fundação do time", required = true)
     private String dataFundacao;
+    @ApiModelProperty(value="URI do escudo do time em formato .png", required = true)
     private String escudo;
     
     public long getId() {
