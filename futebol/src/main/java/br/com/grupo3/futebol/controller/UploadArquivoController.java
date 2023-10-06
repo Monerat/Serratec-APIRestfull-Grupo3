@@ -1,5 +1,7 @@
 package br.com.grupo3.futebol.controller;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -36,15 +38,28 @@ public class UploadArquivoController {
             @ApiResponse(code = 400, message = "Erro por parte do usuário ao fazer a requisição"),
             @ApiResponse(code = 404, message = "Recurso não encontrado")
     })
-    public ResponseEntity<String> salvarArquivo(@RequestParam("file") MultipartFile file){
+    public ResponseEntity<String> salvarArquivo(@RequestParam("file") MultipartFile file) {
         var caminho = pathArquivos + file.getOriginalFilename();
-        try{
+        try {
+            // Salva o arquivo de imagem -- lógica original do tik
             Files.copy(file.getInputStream(), Path.of(caminho), StandardCopyOption.REPLACE_EXISTING);
-            return new ResponseEntity<>("{ \"mensagem\": \"Arquivo carregado com successo!\"}",HttpStatus.OK);
-        } catch(Exception e){
-            return new ResponseEntity<>("{ \"mensagem\": \"Erro ao carregar o arquivo!\"}",HttpStatus.OK);
+
+            // Codifica a imagem em base64 -- agradecer ao Michael por essa logica
+            String encodedString = Base64.getEncoder().encodeToString(file.getBytes());
+
+            // Salva a string codificada em um arquivo .txt
+            var caminhoTxt = pathArquivos + file.getOriginalFilename() + ".txt";
+
+            // Escrever a string acima codificada em base64 no arquivo .txt
+            // StandardChar converte a string em um array de bytes
+            // A codificação UTF-8 é usada pra garantir que a porra toda vai ser convertida
+            Files.write(Path.of(caminhoTxt), encodedString.getBytes(StandardCharsets.UTF_8));
+
+            return new ResponseEntity<>("{ \"mensagem\": \"Arquivo e texto base64 carregados com sucesso!\"}",
+                    HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("{ \"mensagem\": \"Erro ao carregar o arquivo e o texto base64!\"}",
+                    HttpStatus.OK);
         }
     }
 }
-
-

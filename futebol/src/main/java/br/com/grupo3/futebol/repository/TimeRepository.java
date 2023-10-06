@@ -1,6 +1,10 @@
 package br.com.grupo3.futebol.repository;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +25,7 @@ public class TimeRepository {
         ultimoID++;
         time.setId(ultimoID);
         time.setEscudo(verifEscudo(time.getNome() + ".png"));
+        time.setBase64img(verifEscudo(time.getNome() + ".png.txt")); // nao consegui remover o .png, ai adicionei ele no path :) 
         times.add(time);
 
         return time;
@@ -30,11 +35,36 @@ public class TimeRepository {
     public String verifEscudo(String fileName) {
         String folderPath = "src/main/java/br/com/grupo3/futebol/base/";
         File file = new File(folderPath + fileName);
-        
+
         if (file.exists()) {
             return file.getAbsolutePath();
-        } throw new ResourceNotFound("Arquivo não encontrado na base com o nome: "+ fileName);
-    
+
+        // EU ME PERDI LEGAL NISSO AQUI ME DESCULPA PERDI MUITO TEMPO NISSO QUIS FAZER FUNCIONAR PEÇO PERDÃO PELO VACILO
+        // MAS FUNCIONA ... EU ACHO :) 
+        // EDIT: NAO FUNCIONOU, NAO SALVA O TIME NA API, APENAS ADICIONA O TXT (:
+        } else {
+            // Se o arquivo não existir, tenta criar um novo arquivo txt com a imagem em base64, ai nao precisa existir o arquivo .txt
+            if (fileName.endsWith(".txt")) {
+                try {
+                    String imageName = fileName.substring(0, fileName.length() - 4); // Remove a extensão .txt
+                    File imageFile = new File(folderPath + imageName);
+                    if (imageFile.exists()) {
+                        // Codifica a imagem em base64
+                        byte[] fileContent = Files.readAllBytes(imageFile.toPath());
+                        String encodedString = Base64.getEncoder().encodeToString(fileContent);
+
+                        // Salva a string codificada em um novo arquivo txt
+                        Files.write(file.toPath(), encodedString.getBytes(StandardCharsets.UTF_8));
+
+                        return file.getAbsolutePath();
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException("Erro ao criar o arquivo txt com a imagem em base64", e);
+                }
+            }
+
+            throw new ResourceNotFound("Arquivo não encontrado na base com o nome: " + fileName);
+        }
     }
 
     //Read

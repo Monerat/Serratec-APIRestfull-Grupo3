@@ -33,4 +33,5 @@ build/
 .vscode/
 
 ### IMG ###
-*.png
+/src/main/java/br/com/grupo3/futebol/base/*.png
+/src/main/java/br/com/grupo3/futebol/base/*.txt
