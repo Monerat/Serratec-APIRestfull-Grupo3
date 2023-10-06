@@ -56,6 +56,7 @@ public class TimeRepository {
 
     //Update
     public Time update(Time time){
+        time.setEscudo(verifEscudo(time.getNome() + ".png"));
         times.removeIf(t -> t.getId()==time.getId());
         time.setEscudo(verifEscudo(time.getNome() + ".png"));
         times.add(time);
