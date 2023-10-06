@@ -63,7 +63,6 @@ public class Time {
             throw new ResourceBadRequest("Tá escrevendo errado a requisição, se vira pra acertar ai");
         }
     }
-
     public String getBase64img() {
         return base64img;
     }
