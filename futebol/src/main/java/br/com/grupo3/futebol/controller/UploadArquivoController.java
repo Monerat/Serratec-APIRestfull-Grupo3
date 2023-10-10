@@ -43,8 +43,8 @@ public class UploadArquivoController {
         try {
             Files.copy(file.getInputStream(), Path.of(caminho), StandardCopyOption.REPLACE_EXISTING);
             return new ResponseEntity<>("{ \"mensagem\": \"Arquivo carregado com successo!\"}", HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>("{ \"mensagem\": \"Erro ao carregar o arquivo!\"}", HttpStatus.OK);
+        } catch (Exception e) { 
+            return new ResponseEntity<>("{ \"mensagem\": \"Erro ao carregar o arquivo!\"}", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
